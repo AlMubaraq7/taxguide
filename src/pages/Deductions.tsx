@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { TaxpayerFacts } from "../types/tax";
+import { formatNumber } from "../utils";
 
 interface DeductionsProps {
   onNext: (reliefs: TaxpayerFacts["reliefs"]) => void;
@@ -17,12 +18,18 @@ export default function Deductions({ onNext, onBack }: DeductionsProps) {
 
   const handleNext = () => {
     onNext({
-      rentPaid: Number(rentPaid) || 0,
-      pensionContribution: Number(pensionContribution) || 0,
-      nhfContribution: Number(nhfContribution) || 0,
-      nhisContribution: Number(nhisContribution) || 0,
-      lifeInsurancePremium: Number(lifeInsurancePremium) || 0,
-      ownerOccupiedHomeLoanInterest: Number(ownerOccupiedHomeLoanInterest) || 0,
+      rentPaid: Number(rentPaid.replace(/,/g, "")) || 0,
+
+      pensionContribution: Number(pensionContribution.replace(/,/g, "")) || 0,
+
+      nhfContribution: Number(nhfContribution.replace(/,/g, "")) || 0,
+
+      nhisContribution: Number(nhisContribution.replace(/,/g, "")) || 0,
+
+      lifeInsurancePremium: Number(lifeInsurancePremium.replace(/,/g, "")) || 0,
+
+      ownerOccupiedHomeLoanInterest:
+        Number(ownerOccupiedHomeLoanInterest.replace(/,/g, "")) || 0,
     });
   };
 
@@ -139,11 +146,11 @@ function MoneyField({
 
         <input
           id={id}
-          type="number"
-          min="0"
+          type="text"
+          inputMode="numeric"
           placeholder="0"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(formatNumber(e.target.value))}
         />
       </div>
     </div>

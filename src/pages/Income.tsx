@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { EmploymentStatus, TaxpayerFacts } from "../types/tax";
+import { formatNumber } from "../utils";
 
 interface IncomeProps {
   employmentStatus: EmploymentStatus;
@@ -28,12 +29,12 @@ export default function Income({
 
   const handleNext = () => {
     onNext({
-      grossEmploymentIncome: Number(grossEmploymentIncome) || 0,
+      grossEmploymentIncome:
+        Number(grossEmploymentIncome.replace(/,/g, "")) || 0,
 
-      selfEmploymentIncome: Number(selfEmploymentIncome) || 0,
+      selfEmploymentIncome: Number(selfEmploymentIncome.replace(/,/g, "")) || 0,
     });
   };
-
   return (
     <main className="assessment">
       {" "}
@@ -118,11 +119,11 @@ function MoneyField({
         <span>₦</span>
         <input
           id={id}
-          type="number"
-          min="0"
+          type="text"
+          inputMode="numeric"
           placeholder="0"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(formatNumber(e.target.value))}
         />
       </div>
     </div>
