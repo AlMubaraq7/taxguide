@@ -64,7 +64,28 @@ export default function Results({ result, onStartOver }: ResultsProps) {
           explanation={result.explanation}
           rules={result.rules_fired}
         />
+        <section className="policy-reference">
+          <div>
+            <span className="eyebrow">SOURCE DOCUMENT</span>
 
+            <h2>Nigeria Tax Policy</h2>
+
+            <p>
+              The assessment is based on the tax policy document used by this
+              expert system.
+            </p>
+          </div>
+
+          <a
+            href="/documents/Tax-Policy-Document.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="policy-link"
+          >
+            View policy document
+            <span>↗</span>
+          </a>
+        </section>
         <div className="results-footer">
           <button className="secondary-button" onClick={onStartOver}>
             Start a new assessment
@@ -186,7 +207,7 @@ function TaxBands({ bands }: TaxBandsProps) {
 
 // EXPLANATION SECTION
 interface ExplanationProps {
-  explanation: string[];
+  explanation: TaxCalculationResponse["explanation"];
   rules: string[];
 }
 
@@ -219,11 +240,27 @@ function Explanation({ explanation, rules }: ExplanationProps) {
           </div>
 
           <div className="reasoning-trace">
-            {explanation.map((step, index) => (
-              <div className="reasoning-step" key={`${step}-${index}`}>
+            {explanation.map((entry, index) => (
+              <div className="reasoning-step" key={`${entry.rule}-${index}`}>
                 <div className="step-number">{index + 1}</div>
 
-                <p>{formatExplanation(step)}</p>
+                <div className="reasoning-step-content">
+                  <div className="reasoning-step-header">
+                    <div>
+                      <span className="rule-id">{entry.rule}</span>
+
+                      <strong>{entry.description}</strong>
+                    </div>
+
+                    <span className="source-badge">{entry.source}</span>
+                  </div>
+
+                  <div className="reasoning-lines">
+                    {entry.lines.map((line, lineIndex) => (
+                      <p key={`${entry.rule}-${lineIndex}`}>{line}</p>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -297,8 +334,4 @@ function formatCurrency(value: number) {
     currency: "NGN",
     maximumFractionDigits: 0,
   }).format(value);
-}
-
-function formatExplanation(text: string) {
-  return text.replace(/^(\s*)/, "");
 }

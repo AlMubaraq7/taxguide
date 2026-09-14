@@ -14,7 +14,12 @@ export interface TaxBand {
   rate: string;
   tax: number;
 }
-
+export interface ExplanationEntry {
+  rule: string;
+  description: string;
+  source: string;
+  lines: string[];
+}
 export interface TaxCalculationResponse {
   is_exempt: boolean;
   chargeable_income: number;
@@ -25,5 +30,5 @@ export interface TaxCalculationResponse {
   monthly_tax: number;
   severance_wht: number | null;
   rules_fired: string[];
-  explanation: string[];
+  explanation: ExplanationEntry[];
 }
